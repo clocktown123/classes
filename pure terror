@@ -1,0 +1,95 @@
+import pygame
+import random
+pygame.init()  
+pygame.display.set_caption("carrots and peas")  # sets the window title
+screen = pygame.display.set_mode((800, 800))  # creates game screen
+screen.fill((0,0,0))
+clock = pygame.time.Clock() #set up clock
+
+#----------------------------class snowflake------------------------------------------
+class leaf:
+    def __init__(self, x, y):
+        self.xpos = x
+        self.ypos = y
+    def move(self):
+        self.xpos += random.randrange(-2, 3)
+        self.ypos += random.randrange(-8, 0)
+        if self.ypos <0:
+            self.ypos = random.randrange(600, 800)
+    def draw(self):
+        pygame.draw.circle(screen, (0,0,0), (self.xpos, self.ypos), random.randrange(0,20)) #draw flakes
+
+class carrot:
+    def __init__(self, x, y):
+        self.xpos = x
+        self.ypos = y
+    def move(self):
+        self.xpos += random.randrange(-2, 3)
+        self.ypos += random.randrange(-3, 9)
+        if self.ypos >500:
+            self.ypos = random.randrange(-600, 600)
+    def draw(self):
+        pygame.draw.rect(screen, (250, 155, random.randrange(0,255)), (self.xpos, self.ypos, 20, random.randrange(0, 50))) #draw flakes
+        
+class idk:
+    def __init__(self, x, y):
+        self.color = (random.randrange(100, 250),random.randrange(100, 250),random.randrange(100, 250))
+        self.xpos = x
+        self.ypos = y
+    def move(self):
+        self.xpos += random.randrange(-70, 3)
+        self.ypos += random.randrange(-10, 0)
+        if self.ypos <0:
+            self.ypos = random.randrange(600, 800)
+        if self.xpos <0:
+            self.xpos = random.randrange(0, 800)
+    def draw(self):
+        pygame.draw.polygon(screen, self.color, ((self.xpos+20, self.ypos), (self.xpos+30, self.ypos), (self.xpos+25, self.ypos+25)))
+#----------------------------------------------------------------------
+
+
+#create a bunch of snowflakes
+leafBag = []
+for i in range(500):
+    leafBag.append(leaf(random.randrange(0, 500), random.randrange(-500, 400)))
+
+carrotBag = []
+for i in range(500):
+    carrotBag.append(carrot(random.randrange(0, 500), random.randrange(-500, 400)))
+
+idkBag = []
+for i in range(500):
+    idkBag.append(idk(random.randrange(400, 500), random.randrange(500, 800)))
+
+while(1): #omg game lup---------
+    clock.tick(60) #FPS
+    
+    #physics section----
+    
+    #move flakes
+    for i in range(len(leafBag)):
+        leafBag[i].move()
+        
+    for i in range(len(carrotBag)):
+        carrotBag[i].move()
+    
+    for i in range(len(idkBag)):
+        idkBag[i].move()
+         
+                      
+
+    #render section---
+    #screen.fill((0,0,0))
+    
+    for i in range(len(leafBag)):
+        leafBag[i].draw()
+     
+    for i in range(len(carrotBag)):
+        carrotBag[i].draw()
+        
+    for i in range(len(idkBag)):
+        idkBag[i].draw()
+    
+    pygame.display.flip()#this actually puts the pixel on the screen
+   
+pygame.quit()
