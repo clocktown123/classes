@@ -1,0 +1,70 @@
+import pygame
+import random
+pygame.init()  
+pygame.display.set_caption("carrots and peas")  # sets the window title
+screen = pygame.display.set_mode((500, 500))  # creates game screen
+screen.fill((0,0,0))
+clock = pygame.time.Clock() #set up clock
+
+#----------------------------class snowflake------------------------------------------
+class leaf:
+    def __init__(self, x, y):
+        self.xpos = x
+        self.ypos = y
+    def move(self):
+        self.xpos += random.randrange(-2, 3)
+        self.ypos += random.randrange(-3, 0)
+        if self.ypos <0:
+            self.ypos = random.randrange(600, 800)
+    def draw(self):
+        pygame.draw.circle(screen, (50, 255, 55), (self.xpos, self.ypos), 6) #draw flakes
+
+class carrot:
+    def __init__(self, x, y):
+        self.xpos = x
+        self.ypos = y
+    def move(self):
+        self.xpos += random.randrange(-2, 3)
+        self.ypos += random.randrange(-3, 0)
+        if self.ypos <0:
+            self.ypos = random.randrange(600, 800)
+    def draw(self):
+        pygame.draw.rect(screen, (250, 155, 15), (self.xpos, self.ypos, 20, 20)) #draw flakes
+#----------------------------------------------------------------------
+
+
+#create a bunch of snowflakes
+leafBag = []
+for i in range(500):
+    leafBag.append(leaf(random.randrange(0, 500), random.randrange(-500, 0)))
+
+carrotBag = []
+for i in range(500):
+    carrotBag.append(carrot(random.randrange(0, 500), random.randrange(-500, 0)))
+
+while(1): #omg game lup---------
+    clock.tick(60) #FPS
+    
+    #physics section----
+    
+    #move flakes
+    for i in range(len(leafBag)):
+        leafBag[i].move()
+        
+    for i in range(len(carrotBag)):
+        carrotBag[i].move()
+         
+                      
+
+    #render section---
+    screen.fill((0,0,0))
+    
+    for i in range(len(leafBag)):
+        leafBag[i].draw()
+     
+    for i in range(len(carrotBag)):
+        carrotBag[i].draw()
+    
+    pygame.display.flip()#this actually puts the pixel on the screen
+   
+pygame.quit()
