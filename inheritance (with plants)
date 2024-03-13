@@ -1,0 +1,182 @@
+import pygame
+pygame.init
+import random
+from pygame import Vector2
+
+#constants for colors
+RED = (250,0,0)
+ORANGE = (200, 100, 0)
+GREEN = (0,150, 0)
+CYAN = (0,255,255)
+YELLOW = (255,255,0)
+WHITE = (255,255,255)
+# parent class
+class Plant( object ):    
+          
+        def __init__(self, x, y):   
+            self.xpos = x
+            self.ypos = y
+            self.size = 10
+            self.water = 0
+            self.waterd = False
+            
+        def grow(self):
+            if self.water>30:
+                self.water-=30
+                self.size +=10
+                print("growing!")
+                
+        def getWatered(self):
+            self.waterd = True
+            self.water+=(random.randint(2,8)/10)
+
+
+# child class
+class Flower( Plant ):           
+        def __init__(self, xpos, ypos, type, color):
+                self.color = color
+                self.type = type
+  
+                # invoking the __init__ of the parent class 
+                Plant.__init__(self, xpos, ypos)
+        
+        def draw(self):
+            pygame.draw.rect(screen, (GREEN), (self.xpos-10, self.ypos+20, 20, 100+self.size*10)) 
+            pygame.draw.circle(screen, (self.color), (self.xpos-20, self.ypos+20), 20+self.size) 
+            pygame.draw.circle(screen, (self.color), (self.xpos-20, self.ypos-20), 20+self.size) 
+            pygame.draw.circle(screen, (self.color), (self.xpos+30, self.ypos+20), 20+self.size) 
+            pygame.draw.circle(screen, (self.color), (self.xpos+30, self.ypos-20), 20+self.size) 
+            #add missing petals here
+            pygame.draw.circle(screen, (ORANGE), (self.xpos, self.ypos), 20+self.size)
+            self.waterd = False   
+
+class bush( Flower ):
+     
+     
+
+     def draw (self):
+          pygame.draw.circle(screen, (self.color), (self.xpos+30, self.ypos+90,), 50+self.size)
+          pygame.draw.circle(screen, (self.color), (self.xpos-20, self.ypos+130), 50+self.size)
+          pygame.draw.circle(screen, (self.color), (self.xpos+80, self.ypos+130), 50+self.size)
+          
+
+          self.waterd = False
+
+        
+                
+#water class
+class Water:
+    def __init__(self, pos: Vector2, live: bool = True, xvel: int | float = random.randint(-3,3)):
+          self.pos = pos
+          self.vel = Vector2(xvel,0)
+          self.color = (0,random.randint(0,255),random.randint(0,255))
+          self.size = random.randint(1,50)
+          self.dead = live
+    def revive(self,mousepos):
+         self.dead = False
+         self.pos = mousepos
+         self.vel = Vector2(random.randint(-3,3),0)
+         self.color = (0,random.randint(0,255),random.randint(0,255))
+         self.size = random.randint(1,50)
+    def drip(self):
+         if self.dead:
+              return
+         self.vel.y += 0.1
+         self.pos += self.vel
+         if self.pos.y >= 800:
+              self.dead = True
+    def draw(self,screen):
+         if self.dead:
+              return
+         pygame.draw.circle(screen, self.color, self.pos, self.size)
+    
+#bool to hold if the mouse is held
+held = False
+#bool to hold if the mouse has been tapped
+tap = False
+#The mouse pos on the screen
+mousePos = (0,0)
+#bool to hold if the mouse has been tapped and hasn't been released
+tapped = False
+                  
+# creation of an object variable or an instance
+f1 = Flower(200, 400, "daisy", RED)   
+b1 = bush(400, 400, "bushy", GREEN)
+hydrate = [Water(Vector2(200,200)) for i in range(500)]
+
+#creates game screen and caption
+screen = pygame.display.set_mode((800, 800))
+pygame.display.set_caption("inheritance demo")
+
+#game variables
+children = True #variable to quit out of game loop
+clock = pygame.time.Clock() #sets up a game clock to regulate game speed
+
+watering = False
+
+#BEGIN GAME LOOP######################################################
+while children:
+    tap = False
+    clock.tick(60) #FPS (frames per second)
+      
+    #pygame's way of listening for events (key presses, mouse clicks, etc)
+    for event in pygame.event.get(): #2b- i mean event queue
+        if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+            children = False
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if not tapped:
+                tap = True
+                tapped = True
+            held = True
+        if event.type == pygame.MOUSEBUTTONUP:
+            held = False
+            tapped = False
+        if event.type == pygame.MOUSEMOTION:
+            mousePos = Vector2(event.pos)
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_w:
+                print("watering plant!")
+                watering = True
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_w:
+                print("stopped watering!")
+                watering = False
+    #keyboard input-----------------------------------
+    print("press w to water, any other key to skip")
+    for a in hydrate:
+        a.drip()
+    if watering:
+        for a in hydrate:
+             if a.dead:
+                  a.revive(mousePos)
+                  break
+
+        f1.getWatered()
+        b1.getWatered()
+    #render section-----------------------------------
+ 
+
+    #draw class objects
+    screen.fill((0,0,0))
+
+    if b1.size > 30:
+        screen.fill((250,250,210))
+        pygame.draw.circle(screen, (YELLOW), (0,0), 100)
+    if b1.size > 60:
+         screen.fill((128,128,128))
+         pygame.draw.circle(screen, (WHITE), (0,0), 100)
+
+    b1.grow()
+    b1.draw()
+    
+    f1.grow()
+    f1.draw()
+
+    for a in hydrate:
+        a.draw(screen)
+  
+
+    pygame.display.flip() #update graphics each game loop
+
+#END GAME LOOP#######################################################
+pygame.quit()
