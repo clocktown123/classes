@@ -1,0 +1,46 @@
+#include<iostream>
+using namespace std;
+
+class student {
+private:
+	string name;
+	float mathGrade;
+	float scienceGrade;
+	float englishGrade;
+public:
+	student(string n, float MG, float SG, float EG);
+	int getAvg();
+	void printReport();
+
+
+
+};
+
+
+int main() {
+	student jayden("Jayden", 90, 90, 40);
+	jayden.printReport();
+	cout << endl;
+	jayden.getAvg();
+
+
+}
+
+student::student(string n, float MG, float SG, float EG) {
+	name = n;
+	mathGrade = MG;
+	scienceGrade = SG;
+	englishGrade = EG;
+}
+
+void student::printReport() {
+	cout << "your math grade is a " << mathGrade << endl;
+	cout << "your english grade is a " << englishGrade << endl;
+	cout << "your science grade is a " << scienceGrade << endl;
+}
+
+int student::getAvg() {
+	float answer = (mathGrade + scienceGrade + englishGrade) / 3;
+	cout << "your average grade is a " << answer << endl;
+	return true;
+}
