@@ -1,0 +1,27 @@
+class garden:
+    def __init__ (self):
+        self.amount = 0
+        
+    def planting(self):
+        print("planting...")
+        self.amount += 1
+        
+    def harvesting(self):
+        print("harvesting...")
+        self.amount -= 1
+    
+    def watering(self):
+        print("you have ", self.amount, "amount of flowers")
+    
+garden_box = garden()
+
+garden_box.watering()
+
+garden_box.planting()
+garden_box.planting()
+
+garden_box.watering()
+
+garden_box.harvesting()
+
+garden_box.watering()
