@@ -1,0 +1,110 @@
+#include <iostream>
+using namespace std;
+
+class Enoch {
+
+private:
+	float money;
+protected:
+	int ID;
+public:
+	string nickname;
+
+	Enoch() { money = 100.00; ID = 12345; nickname = "CoolBeans"; }
+	void printInfo() {
+		cout << "My name is " << nickname << endl;
+		cout << "My ID is " << ID << endl;
+		cout << "I have " << money << endl;
+	}
+
+	//friend class declaration
+	friend class Jaime;
+};
+
+class Jaime {
+public:
+	void display(Enoch& e1) {
+		cout << "The value of Enoch's Private Variable = " << e1.money << endl;
+		cout << "The value of Enoch's Protected Variable = " << e1.ID << endl;
+		cout << "The vlaue of Enoch's Public Variable = " << e1.nickname << endl;
+	}
+
+};
+
+class car {
+private:
+	int transmissionHealth;
+	int engineHealth;
+protected:
+	int lastServiceDate;
+public:
+	int fuelLevel;
+
+	car() { transmissionHealth = 1; engineHealth = 2; lastServiceDate = 2020; fuelLevel = 15;}
+
+	void displayStatus() {
+		cout << "transmission health is " << transmissionHealth << endl;
+		cout << "engine health is " << engineHealth << endl;
+		cout << "last service date is " << lastServiceDate << endl;
+		cout << "the fuel level is " << fuelLevel << endl;
+	}
+
+	void drive() {
+		transmissionHealth = rand() % 4;
+		engineHealth = rand() % 4;
+
+		cout << "transimssion health is now " << transmissionHealth << endl;
+		cout << "engine health is now " << engineHealth << endl;
+	}
+
+	friend class Mechanic;
+};
+
+class Mechanic {
+public:
+	void diagnose(car& car) {
+		cout << "diagnostic report:" << endl;
+		cout << "Engine Health: ";
+		switch (car.engineHealth) {
+		case 0: cout << "no issues"; break;
+		case 1: cout << "minor issues"; break;
+		case 2: cout << "moderate issues"; break;
+		case 3: cout << "severe issues"; break;
+		}
+		cout << endl << "Transmission Health: ";
+		switch (car.transmissionHealth) {
+		case 0: cout << "no issues"; break;
+		case 1: cout << "minor issues"; break;
+		case 2: cout << "moderate issues"; break;
+		case 3: cout << "severe issues"; break;
+		}
+		cout << endl << "last service date: " << car.lastServiceDate << endl;
+	}
+
+	void fix(car& car) {
+		car.transmissionHealth = 0;
+		car.engineHealth = 0;
+
+		cout << "transimssion health is now " << car.transmissionHealth << endl;
+		cout << "engine health is now " << car.engineHealth << endl;
+	}
+
+};
+
+
+
+int main() {
+
+	srand(time(NULL)); //randomizes seed based on computers clock
+
+	Enoch e1;
+	Jaime j1;
+	j1.display(e1);
+	car car;
+	Mechanic car1;
+	car1.diagnose(car);
+	//e1.printInfo();
+
+	car.drive();
+	car1.fix(car);
+}
